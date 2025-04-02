@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>NHL Stats Server</title>
+        <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    </head>
+    <body>
+        <h1>NHL Stats Server</h1>
+        <p>See each of the links below for the supported endpoints.</p>
+        <p>All endpoints will return either a JSON object, or an array of JSON objects.</p>
+        <p>
+            In the case of the result data not existing or the query parameters being incorrect, a plain text error
+            message is returned.
+        </p>
+        <p>
+            The parameters and their correct format are explained under the endpoints. Parameters are surrounded by
+            curly braces. Optional parameters are followed by a question mark.
+        </p>
+        <h3>Resources</h3>
+        <ul>
+            <li><a href="draft" title="/draft">/draft</a></li>
+            <li><a href="home" title="/home">/home</a></li>
+            <li><a href="injuries" title="/injuries">/injuries</a></li>
+            <li><a href="players" title="/players">/players</a></li>
+            <li><a href="playoffs" title="/playoffs">/playoffs</a></li>
+            <li><a href="results" title="/results">/results</a></li>
+            <li><a href="schedule" title="/schedule">/schedule</a></li>
+            <li><a href="standings" title="/standings">/standings</a></li>
+            <li><a href="teams" title="/teams">/teams</a></li>
+        </ul>
+        <h3>Libraries used</h3>
+        <ul>
+            <li>
+                <a href="https://github.com/vtex/country-iso-3-to-2/" title="Country parsing script (github)">
+                    Country parsing script</a>,
+                <span>modified, MIT license</span>
+            </li>
+            <li>
+                <a href="https://flagcdn.com/" title="Country flag CDN">Country flag CDN</a>
+            </li>
+        </ul>
+    </body>
+</html>

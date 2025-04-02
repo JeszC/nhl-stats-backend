@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>/home</title>
+        <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    </head>
+    <body>
+        <h1>/home</h1>
+        <p>
+            Endpoints for the home page content. Top ten teams actually returns the full standings; this is by design
+            so that the results can be filtered by conference or division into top ten parts.
+        </p>
+        <h2>Endpoints:</h2>
+        <ul>
+            <li>
+                /getUpcomingGames/{date}
+                <ul>
+                    <li>date: YYYY-MM-DD</li>
+                </ul>
+            </li>
+            <li>/getTopTen/skaters</li>
+            <li>/getTopTen/goalies</li>
+            <li>/getTopTen/teams</li>
+            <li>/getLatestSeason</li>
+            <li>/getLatestUpcomingSeason</li>
+        </ul>
+        <a href="/" title="Back to index page">Back to index page</a>
+    </body>
+</html>

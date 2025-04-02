@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>/schedule</title>
+        <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    </head>
+    <body>
+        <h1>/schedule</h1>
+        <p>Endpoints for season schedules and game information.</p>
+        <h2>Endpoints:</h2>
+        <ul>
+            <li>
+                /getSchedule/{season}/{team}
+                <ul>
+                    <li>season: start year and end year as one string (as YYYYYYYY)</li>
+                    <li>team: three-letter team abbreviation</li>
+                </ul>
+            </li>
+            <li>
+                /getGame/{gameID}
+                <ul>
+                    <li>gameID: game ID (e.g. 2023020001)</li>
+                </ul>
+            </li>
+            <li>
+                /getSeasonDates/{season}
+                <ul>
+                    <li>season: start year and end year as one string (as YYYYYYYY)</li>
+                </ul>
+            </li>
+        </ul>
+        <a href="/" title="Back to index page">Back to index page</a>
+    </body>
+</html>

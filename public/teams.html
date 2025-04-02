@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>/teams</title>
+        <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    </head>
+    <body>
+        <h1>/teams</h1>
+        <p>
+            Endpoints for team related data. GetTeams-endpoint only returns a list of teams, while the
+            getTeam-endpoint returns actual team related information (rosters, season results, club history etc.).
+        </p>
+        <h2>Endpoints:</h2>
+        <ul>
+            <li>
+                /getTeams/{season}
+                <ul>
+                    <li>season: start year and end year as one string (as YYYYYYYY)</li>
+                </ul>
+            </li>
+            <li>
+                /getTeam/{team}/{season}
+                <ul>
+                    <li>team: three-letter team abbreviation</li>
+                    <li>season: start year and end year as one string (as YYYYYYYY)</li>
+                </ul>
+            </li>
+        </ul>
+        <a href="/" title="Back to index page">Back to index page</a>
+    </body>
+</html>
