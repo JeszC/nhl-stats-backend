@@ -27,6 +27,7 @@ export async function getPlayoffTree(season) {
         throw new Error("HTTP error");
     } else {
         addSeriesData(playoffTree, season, standings.data);
+        populatePlayoffTree(playoffTree);
         return playoffTree;
     }
 }
@@ -90,6 +91,40 @@ function addSeriesData(playoffTree, season, standings) {
                 addLogo(series.bottomSeedTeam);
                 addConferenceAndDivision(series.bottomSeedTeam, standings);
             }
+        }
+    }
+}
+
+/**
+ * Populates the given playoff tree with placeholder data if necessary. This is to ensure certain keys are present
+ * in the JSON data.
+ *
+ * @param playoffTree Playoff tree to which the data will be added.
+ */
+function populatePlayoffTree(playoffTree) {
+    if (!playoffTree.series) {
+        playoffTree.series = [];
+    }
+    const numberOfSeries = 15;
+    let oldLength = playoffTree.series.length;
+    if (numberOfSeries === oldLength) {
+        for (let series of playoffTree.series) {
+            if (!series.topSeedTeam) {
+                series.topSeedTeam = {};
+            }
+            if (!series.bottomSeedTeam) {
+                series.bottomSeedTeam = {};
+            }
+        }
+    } else {
+        for (let i = oldLength; i < numberOfSeries; i++) {
+            let series = {
+                seriesAbbrev: `N/A${i}`,
+                seriesLetter: `N/A${i}`,
+                topSeedTeam: {},
+                bottomSeedTeam: {}
+            };
+            playoffTree.series.push(series);
         }
     }
 }
