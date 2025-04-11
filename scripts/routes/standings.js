@@ -65,7 +65,7 @@ function addDataToStandings(standings, shotData, penaltyData, powerPlayData, pen
             standings[i].powerPlayPct = powerPlayData[i].powerPlayNetPct;
             standings[i].penaltyKillPct = penaltyKillData[i].penaltyKillNetPct;
             standings[i].goalsAgainstPctg = standings[i].goalAgainst / standings[i].gamesPlayed;
-            if (faceOffData.length > 0 && faceOffData[i].faceOffWinPct) {
+            if (faceOffData.length > 0 && faceOffData[i].faceoffWinPct) {
                 standings[i].faceOffWinPct = faceOffData[i].faceoffWinPct;
             }
         }
