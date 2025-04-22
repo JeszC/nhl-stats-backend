@@ -28,9 +28,17 @@ export async function getListOfTeams(season) {
             let teams = [];
             let standings = (await standingsResponse.json()).standings;
             for (let team of standings) {
+                let teamAbbrev;
+                if (team.teamAbbrev.default === "CSE") {
+                    teamAbbrev = "CGS";
+                } else if (team.teamAbbrev.default === "CBN") {
+                    teamAbbrev = "CLE";
+                } else {
+                    teamAbbrev = team.teamAbbrev.default;
+                }
                 teams.push({
                     name: team.teamName.default,
-                    abbrev: team.teamAbbrev.default
+                    abbrev: teamAbbrev
                 });
             }
             teams.sort((a, b) => a.name.localeCompare(b.name));
@@ -53,13 +61,21 @@ export async function getListOfTeams(season) {
  * @throws Error HTTP error if fetching the data fails.
  */
 export async function getTeamData(team, season) {
+    let fixedTeam;
+    if (team === "CSE") {
+        fixedTeam = "CGS";
+    } else if (team === "CBN") {
+        fixedTeam = "CLE";
+    } else {
+        fixedTeam = team;
+    }
     let responses = await Promise.all([
-        fetch(`https://api-web.nhle.com/v1/club-stats/${team}/${season}/2`),
-        fetch(`https://api-web.nhle.com/v1/club-stats/${team}/${season}/3`),
-        fetch(`https://api-web.nhle.com/v1/roster/${team}/${season}`),
-        fetch(`https://api-web.nhle.com/v1/club-schedule-season/${team}/${season}`),
-        fetch(`https://api-web.nhle.com/v1/prospects/${team}`),
-        fetch(`https://records.nhl.com/site/api/franchise-team-totals?cayenneExp=triCode='${team}'`),
+        fetch(`https://api-web.nhle.com/v1/club-stats/${fixedTeam}/${season}/2`),
+        fetch(`https://api-web.nhle.com/v1/club-stats/${fixedTeam}/${season}/3`),
+        fetch(`https://api-web.nhle.com/v1/roster/${fixedTeam}/${season}`),
+        fetch(`https://api-web.nhle.com/v1/club-schedule-season/${fixedTeam}/${season}`),
+        fetch(`https://api-web.nhle.com/v1/prospects/${fixedTeam}`),
+        fetch(`https://records.nhl.com/site/api/franchise-team-totals?cayenneExp=triCode='${fixedTeam}'`),
         fetch("https://api-web.nhle.com/v1/standings-season")
     ]);
     for (let response of responses) {
@@ -80,8 +96,8 @@ export async function getTeamData(team, season) {
         console.error(`${new Date().toLocaleString()}:`, "Error fetching latest standings:", standings.error.message);
         throw new Error("HTTP error");
     } else {
-        addPlayerInfo(playersSeason, playerBios, team, seasonDates, nextSeasonDates);
-        addPlayerInfo(playersPlayoffs, playerBios, team, seasonDates, nextSeasonDates);
+        addPlayerInfo(playersSeason, playerBios, fixedTeam, seasonDates, nextSeasonDates);
+        addPlayerInfo(playersPlayoffs, playerBios, fixedTeam, seasonDates, nextSeasonDates);
         let latestSeason = await getLatestSeason();
         let prospects = {};
         if (season === latestSeason) {
@@ -92,12 +108,12 @@ export async function getTeamData(team, season) {
             prospects.defenders = prospects.defensemen;
             delete prospects.defensemen;
         }
-        let teamStats = getTeamStandingsInfo(standings.data, team);
+        let teamStats = getTeamStandingsInfo(standings.data, fixedTeam);
         let players = {
             season: playersSeason,
             playoffs: playersPlayoffs
         };
-        let injuries = await addInjuryData(players, team, seasonDates);
+        let injuries = await addInjuryData(players, fixedTeam, seasonDates);
         return {players, schedule, teamStats, prospects, franchiseInfo, injuries};
     }
 }
@@ -223,6 +239,10 @@ function addProspectInfo(prospect) {
 function getTeamStandingsInfo(standings, teamAbbreviation) {
     for (let team of standings) {
         if (team.teamAbbrev.default === teamAbbreviation) {
+            return team;
+        } else if (team.teamAbbrev.default === "CSE" && teamAbbreviation === "CGS") {
+            return team;
+        } else if (team.teamAbbrev.default === "CBN" && teamAbbreviation === "CLE") {
             return team;
         }
     }
