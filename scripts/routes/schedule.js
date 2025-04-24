@@ -97,6 +97,11 @@ export function addPenaltyTakerHeadshots(game, rosters) {
                 if (!addPenaltyHeadshot(rosters.awayRosters, penalty, player)) {
                     addPenaltyHeadshot(rosters.homeRosters, penalty, player);
                 }
+                if (penalty.teamAbbrev.default === "CSE") {
+                    penalty.teamAbbrev.default = "CGS";
+                } else if (penalty.teamAbbrev.default === "CBN") {
+                    penalty.teamAbbrev.default = "CLE";
+                }
             }
         }
     }
