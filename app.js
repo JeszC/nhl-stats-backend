@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import draft from "./routes/draft.js";
+import healthcheck from "./routes/healthcheck.js";
 import home from "./routes/home.js";
 import injuries from "./routes/injuries.js";
 import players from "./routes/players.js";
@@ -27,6 +28,7 @@ app.use((_request, response, next) => {
     next();
 });
 
+app.use("/healthcheck", healthcheck);
 app.use("/draft", draft);
 app.use("/home", home);
 app.use("/injuries", injuries);
