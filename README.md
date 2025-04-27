@@ -1,8 +1,8 @@
-# NHL Stats Backend
+# NHL stats backend
 
 ## About
 
-Server for NHL Stats Client.
+Backend for [NHL stats frontend](https://github.com/JeszC/nhl-stats-frontend).
 
 ## Installation prerequisites
 
