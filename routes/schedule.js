@@ -25,7 +25,7 @@ router.get("/getSchedule/:season/:team", async (request, response) => {
 
 router.get("/getGame/:gameID", async (request, response) => {
     let cacheKey = `scheduleGame${request.params.gameID}`;
-    let game = await getFromCache(cacheKey, getGame(request.params.gameID));
+    let game = await getFromCache(cacheKey, getGame(request.params.gameID), 300_000);
     if (game.error) {
         console.error(`${new Date().toLocaleString()}:`, "Error fetching game:", game.error.message);
         response.send(game.error.message);
