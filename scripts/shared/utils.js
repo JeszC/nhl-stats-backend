@@ -16,15 +16,16 @@ import {getCountryTwoLetterCode} from "./countryCodeConverter.js";
  *
  * @param cacheKey Cache key.
  * @param dataFetchFunction Function to execute if the data does not exist in the cache.
+ * @param expireTime Time (in milliseconds) after which the cache will be invalidated.
  *
  * @returns {Promise<{data: {}|[], wasCached: boolean, error: Error}>}
  */
-export async function getFromCache(cacheKey, dataFetchFunction) {
+export async function getFromCache(cacheKey, dataFetchFunction, expireTime = 1_800_000) {
     let cachedData = cache.get(cacheKey);
     if (cachedData === null) {
         try {
             let fetchedData = await dataFetchFunction;
-            cache.put(cacheKey, fetchedData, 1800000);
+            cache.put(cacheKey, fetchedData, expireTime);
             return {
                 data: fetchedData,
                 wasCached: false,
@@ -64,9 +65,9 @@ export function addCountryFlag(person, countryKey) {
 }
 
 /**
- * Returns the start and end dates for the given season. The seasons argument should be an array of all NHL
+ * Returns the start and end dates for the given season. The 'seasons' argument should be an array of all NHL
  * seasons, which can be fetched from the NHL API. This is so that the network requests can be made asynchronously
- * outside of this function. If the season cannot be found, then empty date strings will be returned.
+ * outside this function. If the season cannot be found, then empty date strings will be returned.
  *
  * @param season Season ID with start and end year as one string (YYYYYYYY, e.g., 20232024).
  * @param seasons List of seasons.
