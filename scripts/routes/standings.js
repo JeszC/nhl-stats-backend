@@ -34,10 +34,9 @@ export async function getStandings(season) {
     if (standings.error) {
         console.error(`${new Date().toLocaleString()}:`, "Error fetching latest standings:", standings.error.message);
         throw new Error("HTTP error");
-    } else {
-        addDataToStandings(standings.data, shotData, penaltyData, powerPlayData, penaltyKillData, faceOffData);
-        return standings.data;
     }
+    addDataToStandings(standings.data, shotData, penaltyData, powerPlayData, penaltyKillData, faceOffData);
+    return standings.data;
 }
 
 /**

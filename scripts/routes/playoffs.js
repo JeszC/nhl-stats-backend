@@ -25,11 +25,10 @@ export async function getPlayoffTree(season) {
     if (standings.error) {
         console.error(`${new Date().toLocaleString()}:`, "Error fetching latest standings:", standings.error.message);
         throw new Error("HTTP error");
-    } else {
-        addSeriesData(playoffTree, season, standings.data);
-        populatePlayoffTree(playoffTree);
-        return playoffTree;
     }
+    addSeriesData(playoffTree, season, standings.data);
+    populatePlayoffTree(playoffTree);
+    return playoffTree;
 }
 
 /**
