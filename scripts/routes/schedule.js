@@ -125,22 +125,6 @@ export function addScratchPlayerData(game, rosters) {
 }
 
 /**
- * Fixes some naming inconsistencies for selected teams.
- *
- * @param game JSON object containing the teams.
- */
-export function fixTeamPlaceNames(game) {
-    if (Object.keys(game).length > 0) {
-        if (game.awayTeam.abbrev === "NYR" || game.awayTeam.abbrev === "NYI") {
-            game.awayTeam.placeName.default = "New York";
-        }
-        if (game.homeTeam.abbrev === "NYR" || game.homeTeam.abbrev === "NYI") {
-            game.homeTeam.placeName.default = "New York";
-        }
-    }
-}
-
-/**
  * Returns a list of all NHL seasons.
  *
  * @returns {Promise<[]>} A promise containing the seasons in an array.

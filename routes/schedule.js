@@ -2,7 +2,6 @@ import express from "express";
 import {
     addPenaltyTakerHeadshots,
     addScratchPlayerData,
-    fixTeamPlaceNames,
     getGame,
     getRosters,
     getSchedule,
@@ -33,14 +32,12 @@ router.get("/getGame/:gameID", async (request, response) => {
         if (!game.wasCached && Object.keys(game.data).length > 0) {
             try {
                 let rosters = await getRosters(game.data.awayTeam.abbrev, game.data.homeTeam.abbrev, game.data.season);
-                fixTeamPlaceNames(game.data);
                 addScratchPlayerData(game.data, rosters);
                 addPenaltyTakerHeadshots(game.data, rosters);
             } catch (ignored) {
                 /*
-                 Do nothing because the roster fetch likely failed.
-                 Most likely because of preseason games against international teams (international teams don't have
-                 a valid endpoint on NHL API, so the fetch fails).
+                 Do nothing because the roster fetch likely failed. Most likely because of preseason games against
+                 international teams (international teams don't have a valid endpoint on NHL API, so the fetch fails).
                  */
             }
         }
