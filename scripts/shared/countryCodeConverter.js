@@ -269,6 +269,6 @@ const countries = {
  *
  * @returns {String|undefined} Two-letter country code or undefined.
  */
-export function getCountryTwoLetterCode(threeLetterCode) {
+export function getCountryTwoLetterCode(threeLetterCode = "") {
     return countries[threeLetterCode];
 }
