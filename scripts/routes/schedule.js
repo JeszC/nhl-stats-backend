@@ -33,6 +33,7 @@ export async function getGame(gameID) {
         fetch(`https://api-web.nhle.com/v1/gamecenter/${gameID}/right-rail`),
         fetch(`https://api-web.nhle.com/v1/gamecenter/${gameID}/boxscore`),
         fetch(`https://api-web.nhle.com/v1/gamecenter/${gameID}/play-by-play`),
+        fetch("https://records.nhl.com/site/api/coach"),
         fetch("https://records.nhl.com/site/api/officials")
     ]);
     for (let response of responses) {
@@ -67,7 +68,10 @@ export async function getGame(gameID) {
                     play.details.yCoord = -play.details.yCoord;
                 }
             }
-            let officials = (await responses[4].json()).data;
+            let coaches = (await responses[4].json()).data;
+            addCoachHeadshot(gameData.season, gameData.awayTeam.abbrev, gameData.summary.gameInfo.awayTeam, coaches);
+            addCoachHeadshot(gameData.season, gameData.homeTeam.abbrev, gameData.summary.gameInfo.homeTeam, coaches);
+            let officials = (await responses[5].json()).data;
             addOfficialProperties(gameData.summary.gameInfo.referees, officials);
             addOfficialProperties(gameData.summary.gameInfo.linesmen, officials);
         }
@@ -76,6 +80,23 @@ export async function getGame(gameID) {
         fixTeamRecord(gameData.homeTeam);
     }
     return gameData;
+}
+
+/**
+ * Adds a headshot image for the coach if possible.
+ *
+ * @param season Season ID with start and end year as one string (YYYYYYYY, e.g., 20232024).
+ * @param teamAbbrev Three-letter team abbreviation.
+ * @param teamData JSON object containing the team staff data.
+ * @param coaches Array containing all NHL coaches.
+ */
+function addCoachHeadshot(season, teamAbbrev, teamData, coaches) {
+    for (let coach of coaches) {
+        if (coach.fullName === teamData.headCoach.default) {
+            teamData.headCoach.headshot = `https://assets.nhle.com/mugs/nhl/${season}/${teamAbbrev}/coaches/${coach.id}.png`;
+            return;
+        }
+    }
 }
 
 /**
