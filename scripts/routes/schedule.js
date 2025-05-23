@@ -69,11 +69,11 @@ export async function getGame(gameID) {
                 }
             }
             let coaches = (await responses[4].json()).data;
-            addCoachHeadshot(gameData.season, gameData.awayTeam.abbrev, gameData.summary.gameInfo.awayTeam, coaches);
-            addCoachHeadshot(gameData.season, gameData.homeTeam.abbrev, gameData.summary.gameInfo.homeTeam, coaches);
+            addCoachData(gameData.season, gameData.awayTeam.abbrev, gameData.summary.gameInfo.awayTeam, coaches);
+            addCoachData(gameData.season, gameData.homeTeam.abbrev, gameData.summary.gameInfo.homeTeam, coaches);
             let officials = (await responses[5].json()).data;
-            addOfficialProperties(gameData.summary.gameInfo.referees, officials);
-            addOfficialProperties(gameData.summary.gameInfo.linesmen, officials);
+            addOfficialData(gameData.summary.gameInfo.referees, officials);
+            addOfficialData(gameData.summary.gameInfo.linesmen, officials);
         }
     } else {
         fixTeamRecord(gameData.awayTeam);
@@ -83,17 +83,19 @@ export async function getGame(gameID) {
 }
 
 /**
- * Adds a headshot image for the coach if possible.
+ * Adds information for the coaches.
  *
  * @param season Season ID with start and end year as one string (YYYYYYYY, e.g., 20232024).
  * @param teamAbbrev Three-letter team abbreviation.
  * @param teamData JSON object containing the team staff data.
  * @param coaches Array containing all NHL coaches.
  */
-function addCoachHeadshot(season, teamAbbrev, teamData, coaches) {
+function addCoachData(season, teamAbbrev, teamData, coaches) {
     for (let coach of coaches) {
         if (coach.fullName === teamData.headCoach.default) {
             teamData.headCoach.headshot = `https://assets.nhle.com/mugs/nhl/${season}/${teamAbbrev}/coaches/${coach.id}.png`;
+            teamData.headCoach.nationalityCode = coach.nationalityCode;
+            addCountryFlag(teamData.headCoach, "nationalityCode");
             return;
         }
     }
@@ -214,7 +216,7 @@ function addPenaltyHeadshot(roster, penalty, penaltyTakerName) {
 }
 
 /**
- * Adds player information for the scratched player from the given roster.
+ * Adds information for the scratched player from the given roster.
  *
  * @param roster Roster JSON object.
  * @param scratch Scratched player JSON object.
@@ -232,12 +234,12 @@ function addScratchData(roster, scratch) {
 }
 
 /**
- * Adds properties for the game officials from the official data.
+ * Adds information for the game officials from the official data.
  *
  * @param gameOfficials Officials in the game.
  * @param officialData All NHL officials.
  */
-function addOfficialProperties(gameOfficials, officialData) {
+function addOfficialData(gameOfficials, officialData) {
     for (let gameOfficial of gameOfficials) {
         for (let official of officialData) {
             let officialName = `${official.firstName} ${official.lastName}`;
