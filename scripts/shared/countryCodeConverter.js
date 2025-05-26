@@ -265,9 +265,9 @@ const countries = {
  * Returns the two-letter country code for the given three-letter country code. If there's no match, undefined is
  * returned.
  *
- * @param threeLetterCode Three-letter country code.
+ * @param {string} threeLetterCode Three-letter country code.
  *
- * @returns {String|undefined} Two-letter country code or undefined.
+ * @returns {string|undefined} Two-letter country code or undefined.
  */
 export function getCountryTwoLetterCode(threeLetterCode = "") {
     return countries[threeLetterCode];

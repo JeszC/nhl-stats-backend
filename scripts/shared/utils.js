@@ -14,9 +14,9 @@ import {getCountryTwoLetterCode} from "./countryCodeConverter.js";
  * change the data in the cache. This is by design, as otherwise after the additional processing the cache would
  * need to be updated again manually.
  *
- * @param cacheKey Cache key.
- * @param dataFetchFunction Function to execute if the data does not exist in the cache.
- * @param expireTime Time (in milliseconds) after which the cache will be invalidated.
+ * @param {string} cacheKey Cache key.
+ * @param {Function} dataFetchFunction Function to execute if the data does not exist in the cache.
+ * @param {number} expireTime Time (in milliseconds) after which the cache will be invalidated.
  *
  * @returns {Promise<{data: {}|[], wasCached: boolean, error: Error}>}
  */
@@ -48,7 +48,7 @@ export async function getFromCache(cacheKey, dataFetchFunction, expireTime = 1_8
 }
 
 /**
- * Adds a link to a country flag for the given player based on the given country key. The country key should be a
+ * Adds a link to a country flag for the given person based on the given country key. The country key should be a
  * three-letter country abbreviation. The country flag will be set on countryFlag-property. If a country with the
  * given country key is not found, an empty string is set instead.
  *
@@ -69,7 +69,7 @@ export function addCountryFlag(person, countryKey) {
  * seasons, which can be fetched from the NHL API. This is so that the network requests can be made asynchronously
  * outside this function. If the season cannot be found, then empty date strings will be returned.
  *
- * @param season Season ID with start and end year as one string (YYYYYYYY, e.g., 20232024).
+ * @param {string} season Season ID with start and end year as one string (YYYYYYYY, e.g., 20232024).
  * @param seasons List of seasons.
  *
  * @returns {Promise<{seasonStartDate: string, seasonEndDate: string}>} A promise containing the season start and end
@@ -104,7 +104,7 @@ export async function getSeasonStartAndEndDates(season, seasons) {
  * of all NHL seasons, which can be fetched from the NHL API. This is so that the network requests can be made
  * asynchronously outside of this function. If the season cannot be found, then empty date strings will be returned.
  *
- * @param season Season ID with start and end year as one string (YYYYYYYY, e.g., 20232024).
+ * @param {string} season Season ID with start and end year as one string (YYYYYYYY, e.g., 20232024).
  * @param seasons List of seasons.
  *
  * @returns {Promise<{seasonStartDate: string, seasonEndDate: string}>} A promise containing the season start and end
@@ -139,7 +139,7 @@ export async function getNextSeasonStartAndEndDates(season, seasons) {
  * seasons, which can be fetched from the NHL API. This is so that the network requests can be made asynchronously
  * outside of this function.
  *
- * @param season Season ID with start and end year as one string (YYYYYYYY, e.g., 20232024).
+ * @param {string} season Season ID with start and end year as one string (YYYYYYYY, e.g., 20232024).
  * @param seasons List of seasons.
  *
  * @returns {Promise<{data: {}|[], wasCached: boolean, error: Error}>} A promise containing the result.
@@ -162,8 +162,8 @@ export async function getLatestStandingsForSeason(season, seasons) {
  * Returns the age between the start and end dates as a floating point number. For a person who is 21 and a half
  * years old, this function would return 21.5;
  *
- * @param endDate End date as a Date object.
- * @param startDate Start date as a Date object.
+ * @param {Date} endDate End date.
+ * @param {Date} startDate Start date.
  *
  * @returns {number} Age as a floating point number.
  */
@@ -201,7 +201,7 @@ export function filterMissingPlayers(playerStats, playerBios) {
  *
  * @param to Array to which the properties are added.
  * @param from Array from which the properties are added.
- * @param team Three-letter team abbreviation.
+ * @param {string} team Three-letter team abbreviation.
  * @param seasonDates JSON object containing the season start and end dates.
  * @param nextSeasonDates JSON object containing the next season start and end dates.
  */
@@ -257,7 +257,7 @@ async function getLatestSeasonStartAndEndDates() {
  * seasons, which can be fetched from the NHL API. This is so that the network requests can be made asynchronously
  * outside of this function.
  *
- * @param season Season ID with start and end year as one string (YYYYYYYY, e.g., 20232024).
+ * @param {string} season Season ID with start and end year as one string (YYYYYYYY, e.g., 20232024).
  * @param seasons List of seasons.
  *
  * @returns {Promise<string>} A promise containing the latest standings date.
