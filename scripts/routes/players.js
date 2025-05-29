@@ -179,7 +179,11 @@ function addSkaterStats(skaters) {
  */
 function addGoalieStats(goalies) {
     goalies.forEach(goalie => {
-        goalie.totalLosses = goalie.overtimeLosses === undefined ? goalie.losses : goalie.losses + goalie.overtimeLosses;
+        if (goalie.overtimeLosses === undefined) {
+            goalie.totalLosses = goalie.losses;
+        } else {
+            goalie.totalLosses = goalie.losses + goalie.overtimeLosses;
+        }
         goalie.shotsAgainstPerGame = goalie.shotsAgainst / goalie.gamesPlayed;
         goalie.savesPerGame = goalie.saves / goalie.gamesPlayed;
         goalie.timeOnIcePerGame = goalie.timeOnIce / goalie.gamesPlayed;

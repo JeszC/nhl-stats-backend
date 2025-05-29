@@ -93,8 +93,9 @@ export async function getGame(gameID) {
 function addCoachData(season, teamAbbrev, teamData, coaches) {
     for (let coach of coaches) {
         if (coach.fullName === teamData.headCoach.default) {
-            teamData.headCoach.headshot = `https://assets.nhle.com/mugs/nhl/${season}/${teamAbbrev}/coaches/${coach.id}.png`;
-            teamData.headCoach.nationalityCode = coach.nationalityCode;
+            let headCoach = teamData.headCoach;
+            headCoach.headshot = `https://assets.nhle.com/mugs/nhl/${season}/${teamAbbrev}/coaches/${coach.id}.png`;
+            headCoach.nationalityCode = coach.nationalityCode;
             addCountryFlag(teamData.headCoach, "nationalityCode");
             return;
         }
