@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>/trades</title>
+        <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    </head>
+    <body>
+        <h1>/trades</h1>
+        <p>
+            Endpoints for trade related data.
+        </p>
+        <h2>Endpoints:</h2>
+        <ul>
+            <li>
+                /getTrades/{pageOffset}
+                <ul>
+                    <li>
+                        pageOffset: An integer representing the 'page' that contains the trades. A bigger number
+                        represents earlier trades. The argument should be in multiples of ten, e.g., 0, 10, 20, etc. For
+                        example, number 0 would give the ten latest trades and number 10 would give the ten penultimate
+                        trades.
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <a href="/" title="Back to index page">Back to index page</a>
+    </body>
+</html>
