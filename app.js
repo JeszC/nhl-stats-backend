@@ -12,6 +12,7 @@ import results from "./routes/results.js";
 import schedule from "./routes/schedule.js";
 import standings from "./routes/standings.js";
 import teams from "./routes/teams.js";
+import trades from "./routes/trades.js";
 
 dotenv.config();
 const PORT = process.env.PORT || 3001;
@@ -38,6 +39,7 @@ app.use("/results", results);
 app.use("/schedule", schedule);
 app.use("/standings", standings);
 app.use("/teams", teams);
+app.use("/trades", trades);
 app.use((_request, response) => {
     response.sendStatus(400);
 });
