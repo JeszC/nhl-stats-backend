@@ -24,7 +24,7 @@ export async function getFromCache(cacheKey, dataFetchFunction, expireTime = 1_8
     let cachedData = cache.get(cacheKey);
     if (cachedData === null) {
         try {
-            let fetchedData = await dataFetchFunction;
+            let fetchedData = await dataFetchFunction();
             cache.put(cacheKey, fetchedData, expireTime);
             return {
                 data: fetchedData,
