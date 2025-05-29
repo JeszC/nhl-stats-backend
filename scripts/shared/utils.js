@@ -155,7 +155,7 @@ export async function getLatestStandingsForSeason(season, seasons) {
 
     let standingsFetchDate = await getLatestStandingsDateForSeason(season, seasons);
     let cacheKey = `latestStandingsForSeason${season}`;
-    return await getFromCache(cacheKey, getLatestStandings(standingsFetchDate));
+    return await getFromCache(cacheKey, () => getLatestStandings(standingsFetchDate));
 }
 
 /**

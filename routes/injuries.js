@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get("/getInjuries", async (_request, response) => {
     let cacheKey = "allInjuries";
-    let injuries = await getFromCache(cacheKey, getInjuries());
+    let injuries = await getFromCache(cacheKey, () => getInjuries());
     if (injuries.error) {
         console.error(`${new Date().toLocaleString()}:`, "Error fetching injuries:", injuries.error.message);
         response.send(injuries.error.message);
@@ -18,7 +18,7 @@ router.get("/getInjuries", async (_request, response) => {
 router.get("/getInjuries/:teams", async (request, response) => {
     let teams = (request.params.teams).split("&");
     let cacheKey = `injuries${teams.join("")}`;
-    let injuries = await getFromCache(cacheKey, getInjuriesForTeams(teams));
+    let injuries = await getFromCache(cacheKey, () => getInjuriesForTeams(teams));
     if (injuries.error) {
         console.error(`${new Date().toLocaleString()}:`, "Error fetching injuries:", injuries.error.message);
         response.send(injuries.error.message);

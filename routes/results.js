@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get("/getResults/:date", async (request, response) => {
     let cacheKey = `results${request.params.date}`;
-    let schedule = await getFromCache(cacheKey, getGamesByDate(request.params.date));
+    let schedule = await getFromCache(cacheKey, () => getGamesByDate(request.params.date));
     if (schedule.error) {
         console.error(`${new Date().toLocaleString()}:`, "Error fetching game results:", schedule.error.message);
         response.send(schedule.error.message);

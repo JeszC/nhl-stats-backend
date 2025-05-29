@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get("/getPlayoffTree/:season", async (request, response) => {
     let cacheKey = `playoffTree${request.params.season}`;
-    let playoffTree = await getFromCache(cacheKey, getPlayoffTree(request.params.season));
+    let playoffTree = await getFromCache(cacheKey, () => getPlayoffTree(request.params.season));
     if (playoffTree.error) {
         console.error(`${new Date().toLocaleString()}:`, "Error fetching playoff tree:", playoffTree.error.message);
         response.send(playoffTree.error.message);
@@ -19,7 +19,7 @@ router.get("/getPlayoffSeries/:season/:seriesLetter", async (request, response) 
     let season = request.params.season;
     let seriesLetter = request.params.seriesLetter;
     let cacheKey = `playoffSeries${season}${seriesLetter}`;
-    let playoffSeries = await getFromCache(cacheKey, getPlayoffSeries(season, seriesLetter));
+    let playoffSeries = await getFromCache(cacheKey, () => getPlayoffSeries(season, seriesLetter));
     if (playoffSeries.error) {
         console.error(`${new Date().toLocaleString()}:`, "Error fetching playoff series:", playoffSeries.error.message);
         response.send(playoffSeries.error.message);

@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get("/getDraftResults/:season", async (request, response) => {
     let cacheKey = `draft${request.params.season}`;
-    let draft = await getFromCache(cacheKey, getDraftResults(request.params.season));
+    let draft = await getFromCache(cacheKey, () => getDraftResults(request.params.season));
     if (draft.error) {
         console.error(`${new Date().toLocaleString()}:`, "Error fetching draft results:", draft.error.message);
         response.send(draft.error.message);

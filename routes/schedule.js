@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.get("/getSchedule/:season/:team", async (request, response) => {
     let cacheKey = `schedule${request.params.season}${request.params.team}`;
-    let schedule = await getFromCache(cacheKey, getSchedule(request.params.season, request.params.team));
+    let schedule = await getFromCache(cacheKey, () => getSchedule(request.params.season, request.params.team));
     if (schedule.error) {
         console.error(`${new Date().toLocaleString()}:`, "Error fetching schedules:", schedule.error.message);
         response.send(schedule.error.message);
@@ -24,7 +24,7 @@ router.get("/getSchedule/:season/:team", async (request, response) => {
 
 router.get("/getGame/:gameID", async (request, response) => {
     let cacheKey = `scheduleGame${request.params.gameID}`;
-    let game = await getFromCache(cacheKey, getGame(request.params.gameID), 300_000);
+    let game = await getFromCache(cacheKey, () => getGame(request.params.gameID), 300_000);
     if (game.error) {
         console.error(`${new Date().toLocaleString()}:`, "Error fetching game:", game.error.message);
         response.send(game.error.message);
@@ -48,12 +48,13 @@ router.get("/getGame/:gameID", async (request, response) => {
 router.get("/getSeasonDates/:season", async (request, response) => {
     let cacheKeySeasons = "scheduleSeasons";
     let cacheKeyDates = `scheduleSeasonDates${request.params.season}`;
-    let seasons = await getFromCache(cacheKeySeasons, getSeasons());
+    let seasons = await getFromCache(cacheKeySeasons, () => getSeasons());
     if (seasons.error) {
         console.error(`${new Date().toLocaleString()}:`, "Error fetching list of seasons:", seasons.error.message);
         response.send(seasons.error.message);
     } else {
-        let dates = await getFromCache(cacheKeyDates, getSeasonStartAndEndDates(request.params.season, seasons.data));
+        let dates = await getFromCache(cacheKeyDates,
+            () => getSeasonStartAndEndDates(request.params.season, seasons.data));
         if (dates.error) {
             console.error(`${new Date().toLocaleString()}:`, "Error fetching season dates:", dates.error.message);
             response.send(dates.error.message);
