@@ -1,4 +1,4 @@
-import {addCountryFlag} from "../shared/utils.js";
+import {addCountryFlag, getResponseData} from "../shared/utils.js";
 
 /**
  * Returns the schedule for the given team for the given season.
@@ -157,10 +157,7 @@ export function addScratchPlayerData(game, rosters) {
  */
 export async function getSeasons() {
     let response = await fetch("https://api-web.nhle.com/v1/standings-season");
-    if (response.ok) {
-        return (await response.json()).seasons;
-    }
-    throw new Error("HTTP error");
+    return await getResponseData(response, "seasons");
 }
 
 /**

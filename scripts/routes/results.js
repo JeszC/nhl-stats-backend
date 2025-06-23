@@ -1,3 +1,5 @@
+import {getResponseData} from "../shared/utils.js";
+
 /**
  * Returns a week's worth of games from the given date onwards.
  *
@@ -9,13 +11,10 @@
  */
 export async function getGamesByDate(date) {
     let response = await fetch(`https://api-web.nhle.com/v1/schedule/${date}`);
-    if (response.ok) {
-        let schedule = (await response.json()).gameWeek;
-        let games = [];
-        for (let day of schedule) {
-            games = games.concat(day.games);
-        }
-        return games;
+    let schedule = await getResponseData(response, "gameWeek");
+    let games = [];
+    for (let day of schedule) {
+        games = games.concat(day.games);
     }
-    throw new Error("HTTP error");
+    return games;
 }

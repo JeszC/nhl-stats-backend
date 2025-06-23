@@ -1,3 +1,5 @@
+import {getResponseData} from "../shared/utils.js";
+
 const url = "https://datacrunch.9c9media.ca/statsapi/sports/hockey/leagues/nhl/playerInjuries?type=json";
 
 /**
@@ -20,22 +22,19 @@ function compareDate(date1, date2) {
  */
 export async function getInjuries() {
     let response = await fetch(url);
-    if (response.ok) {
-        let data = await response.json();
-        let injuries = [];
-        for (let team of data) {
-            if (team.playerInjuries && team.playerInjuries.length > 0) {
-                for (let injury of team.playerInjuries) {
-                    injury.teamAbbrev = team.competitor?.shortName;
-                    injury.teamName = team.competitor?.name;
-                    injuries.push(injury);
-                }
+    let data = await getResponseData(response);
+    let injuries = [];
+    for (let team of data) {
+        if (team.playerInjuries && team.playerInjuries.length > 0) {
+            for (let injury of team.playerInjuries) {
+                injury.teamAbbrev = team.competitor?.shortName;
+                injury.teamName = team.competitor?.name;
+                injuries.push(injury);
             }
         }
-        injuries.sort(compareDate);
-        return injuries;
     }
-    throw new Error("HTTP error");
+    injuries.sort(compareDate);
+    return injuries;
 }
 
 /**
@@ -47,17 +46,14 @@ export async function getInjuries() {
  */
 export async function getInjuriesForTeams(teams) {
     let response = await fetch(url);
-    if (response.ok) {
-        let data = await response.json();
-        let injuries = [];
-        for (let team of teams) {
-            for (let teamData of data) {
-                if (teamData.competitor?.shortName.toLowerCase().trim() === team.toLowerCase().trim()) {
-                    injuries.push(teamData);
-                }
+    let data = await getResponseData(response);
+    let injuries = [];
+    for (let team of teams) {
+        for (let teamData of data) {
+            if (teamData.competitor?.shortName.toLowerCase().trim() === team.toLowerCase().trim()) {
+                injuries.push(teamData);
             }
         }
-        return injuries;
     }
-    throw new Error("HTTP error");
+    return injuries;
 }

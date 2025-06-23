@@ -1,4 +1,4 @@
-import {getLatestStandingsForSeason} from "../shared/utils.js";
+import {getLatestStandingsForSeason, getResponseData} from "../shared/utils.js";
 
 /**
  * Returns the playoff tree for the given season.
@@ -43,12 +43,9 @@ export async function getPlayoffTree(season) {
  */
 export async function getPlayoffSeries(season, seriesLetter) {
     let response = await fetch(`https://api-web.nhle.com/v1/schedule/playoff-series/${season}/${seriesLetter}`);
-    if (response.ok) {
-        let playoffSeries = await response.json();
-        capitalizeRoundName(playoffSeries);
-        return playoffSeries;
-    }
-    throw new Error("HTTP error");
+    let playoffSeries = await getResponseData(response);
+    capitalizeRoundName(playoffSeries);
+    return playoffSeries;
 }
 
 /**

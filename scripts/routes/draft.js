@@ -1,3 +1,5 @@
+import {getResponseData} from "../shared/utils.js";
+
 /**
  * Returns the draft results for the given season.
  *
@@ -9,8 +11,5 @@
  */
 export async function getDraftResults(season) {
     let response = await fetch(`https://records.nhl.com/site/api/draft?cayenneExp=draftYear=${season.slice(4)}`);
-    if (response.ok) {
-        return (await response.json()).data;
-    }
-    throw new Error("HTTP error");
+    return await getResponseData(response, "data");
 }

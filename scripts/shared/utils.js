@@ -1,6 +1,16 @@
 import cache from "memory-cache";
 import {getCountryTwoLetterCode} from "./countryCodeConverter.js";
 
+export async function getResponseData(response, subKey) {
+    if (response.ok) {
+        if (subKey) {
+            return (await response.json())[subKey];
+        }
+        return await response.json();
+    }
+    throw new Error("HTTP error");
+}
+
 /**
  * Returns the data associated with the given key from the cache. If the data does not exist, the data will be
  * fetched using the supplied function. A JSON object is returned (wrapped in a promise), with keys
@@ -147,10 +157,7 @@ export async function getNextSeasonStartAndEndDates(season, seasons) {
 export async function getLatestStandingsForSeason(season, seasons) {
     async function getLatestStandings(standingsFetchDate) {
         let response = await fetch(`https://api-web.nhle.com/v1/standings/${standingsFetchDate}`);
-        if (response.ok) {
-            return (await response.json()).standings;
-        }
-        throw new Error("HTTP error");
+        return await getResponseData(response, "standings");
     }
 
     let standingsFetchDate = await getLatestStandingsDateForSeason(season, seasons);
@@ -242,14 +249,11 @@ export function transferProperties(to, from, team, seasonDates, nextSeasonDates)
  */
 async function getLatestSeasonStartAndEndDates() {
     let response = await fetch("https://api-web.nhle.com/v1/schedule/now");
-    if (response.ok) {
-        let schedule = await response.json();
-        return {
-            seasonStartDate: schedule.regularSeasonStartDate,
-            seasonEndDate: schedule.regularSeasonEndDate
-        };
-    }
-    throw new Error("HTTP error");
+    let schedule = await getResponseData(response);
+    return {
+        seasonStartDate: schedule.regularSeasonStartDate,
+        seasonEndDate: schedule.regularSeasonEndDate
+    };
 }
 
 /**

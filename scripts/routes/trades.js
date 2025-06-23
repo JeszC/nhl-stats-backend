@@ -1,3 +1,5 @@
+import {getResponseData} from "../shared/utils.js";
+
 /**
  * Returns an array of ten latest trades.
  *
@@ -9,8 +11,5 @@
  */
 export async function getTrades(pageOffset) {
     let response = await fetch(`https://www.sportsnet.ca/wp-json/sportsnet/v1/trade-tracker?offset=${pageOffset}`);
-    if (response.ok) {
-        return await response.json();
-    }
-    throw new Error("HTTP error");
+    return await getResponseData(response);
 }

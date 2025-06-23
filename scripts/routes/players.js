@@ -1,7 +1,7 @@
 import {
     addCountryFlag,
     filterMissingPlayers,
-    getNextSeasonStartAndEndDates,
+    getNextSeasonStartAndEndDates, getResponseData,
     getSeasonStartAndEndDates,
     transferProperties
 } from "../shared/utils.js";
@@ -144,19 +144,15 @@ async function addLastFiveGamesDates(player) {
 async function addPlayerAwardInformation(player) {
     if (player.awards) {
         let response = await fetch("https://records.nhl.com/site/api/trophy");
-        if (response.ok) {
-            let trophies = (await response.json()).data;
-            for (let award of player.awards) {
-                for (let trophy of trophies) {
-                    if (trophy.name.trim().toLowerCase() === award.trophy.default.trim().toLowerCase()) {
-                        award.briefDescription = trophy.briefDescription;
-                        award.imageUrl = trophy.imageUrl;
-                        break;
-                    }
+        let trophies = await getResponseData(response, "data");
+        for (let award of player.awards) {
+            for (let trophy of trophies) {
+                if (trophy.name.trim().toLowerCase() === award.trophy.default.trim().toLowerCase()) {
+                    award.briefDescription = trophy.briefDescription;
+                    award.imageUrl = trophy.imageUrl;
+                    break;
                 }
             }
-        } else {
-            throw new Error("HTTP error");
         }
     }
 }

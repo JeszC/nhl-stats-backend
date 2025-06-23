@@ -1,3 +1,5 @@
+import {getResponseData} from "../shared/utils.js";
+
 const numberOfGamesToFetch = 12;
 const numberOfPlayersToFetch = 10;
 
@@ -13,10 +15,24 @@ const numberOfPlayersToFetch = 10;
  */
 export async function getUpcomingGames(date) {
     let response = await fetch(`https://api-web.nhle.com/v1/schedule/${date}`);
-    if (response.ok) {
-        let weeklySchedule = await response.json();
-        let gameWeek = weeklySchedule.gameWeek;
-        let games = [];
+    let weeklySchedule = await getResponseData(response);
+    let gameWeek = weeklySchedule.gameWeek;
+    let games = [];
+    for (let day of gameWeek) {
+        let dayGames = [];
+        for (let game of day.games) {
+            if (game.gameState !== "OFF" && game.gameState !== "FINAL") {
+                dayGames.push(game);
+            }
+        }
+        games = games.concat(dayGames);
+    }
+    let startDate = weeklySchedule.nextStartDate;
+    while (games.length < numberOfGamesToFetch && startDate) {
+        let response = await fetch(`https://api-web.nhle.com/v1/schedule/${startDate}`);
+        let data = await getResponseData(response);
+        let gameWeek = data.gameWeek;
+        startDate = data.nextStartDate;
         for (let day of gameWeek) {
             let dayGames = [];
             for (let game of day.games) {
@@ -26,29 +42,8 @@ export async function getUpcomingGames(date) {
             }
             games = games.concat(dayGames);
         }
-        let startDate = weeklySchedule.nextStartDate;
-        while (games.length < numberOfGamesToFetch && startDate) {
-            let response = await fetch(`https://api-web.nhle.com/v1/schedule/${startDate}`);
-            if (response.ok) {
-                let data = await response.json();
-                let gameWeek = data.gameWeek;
-                startDate = data.nextStartDate;
-                for (let day of gameWeek) {
-                    let dayGames = [];
-                    for (let game of day.games) {
-                        if (game.gameState !== "OFF" && game.gameState !== "FINAL") {
-                            dayGames.push(game);
-                        }
-                    }
-                    games = games.concat(dayGames);
-                }
-            } else {
-                throw new Error("HTTP error");
-            }
-        }
-        return games.slice(0, numberOfGamesToFetch);
     }
-    throw new Error("HTTP error");
+    return games.slice(0, numberOfGamesToFetch);
 }
 
 /**
@@ -108,10 +103,7 @@ export async function getTopTenGoalies() {
  */
 export async function getStandings() {
     let response = await fetch(`https://api-web.nhle.com/v1/standings/now`);
-    if (response.ok) {
-        return (await response.json()).standings;
-    }
-    throw new Error("HTTP error");
+    return await getResponseData(response, "standings");
 }
 
 /**
@@ -127,17 +119,14 @@ export async function getStandings() {
  */
 export async function getLatestSeason() {
     let response = await fetch("https://api-web.nhle.com/v1/standings-season");
-    if (response.ok) {
-        let seasons = (await response.json()).seasons;
-        let latestSeason = seasons[seasons.length - 1];
-        let seasonStartDate = new Date(latestSeason.standingsStart);
-        let today = new Date();
-        if (today < seasonStartDate) {
-            return seasons[seasons.length - 2].id.toString();
-        }
-        return latestSeason.id.toString();
+    let seasons = await getResponseData(response, "seasons");
+    let latestSeason = seasons[seasons.length - 1];
+    let seasonStartDate = new Date(latestSeason.standingsStart);
+    let today = new Date();
+    if (today < seasonStartDate) {
+        return seasons[seasons.length - 2].id.toString();
     }
-    throw new Error("HTTP error");
+    return latestSeason.id.toString();
 }
 
 /**
@@ -152,10 +141,7 @@ export async function getLatestSeason() {
  */
 export async function getLatestUpcomingSeason() {
     let response = await fetch("https://api-web.nhle.com/v1/standings-season");
-    if (response.ok) {
-        let seasons = (await response.json()).seasons;
-        let latestSeason = seasons[seasons.length - 1];
-        return latestSeason.id.toString();
-    }
-    throw new Error("HTTP error");
+    let seasons = await getResponseData(response, "seasons");
+    let latestSeason = seasons[seasons.length - 1];
+    return latestSeason.id.toString();
 }
