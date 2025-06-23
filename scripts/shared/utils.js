@@ -11,6 +11,14 @@ export async function getResponseData(response, subKey) {
     throw new Error("HTTP error");
 }
 
+export async function getResponsesData(responses) {
+    let data = [];
+    for (let response of responses) {
+        data.push(await getResponseData(response));
+    }
+    return data;
+}
+
 /**
  * Returns the data associated with the given key from the cache. If the data does not exist, the data will be
  * fetched using the supplied function. A JSON object is returned (wrapped in a promise), with keys

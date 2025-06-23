@@ -3,6 +3,7 @@ import {
     filterMissingPlayers,
     getLatestStandingsForSeason,
     getNextSeasonStartAndEndDates,
+    getResponsesData,
     getSeasonStartAndEndDates,
     transferProperties
 } from "../shared/utils.js";
@@ -78,17 +79,13 @@ export async function getTeamData(team, season) {
         fetch(`https://records.nhl.com/site/api/franchise-team-totals?cayenneExp=triCode='${fixedTeam}'`),
         fetch("https://api-web.nhle.com/v1/standings-season")
     ]);
-    for (let response of responses) {
-        if (!response.ok) {
-            throw new Error("HTTP error");
-        }
-    }
-    let playersSeason = await responses[0].json();
-    let playersPlayoffs = await responses[1].json();
-    let playerBios = await responses[2].json();
-    let schedule = (await responses[3].json()).games;
-    let franchiseInfo = (await responses[5].json()).data;
-    let seasons = (await responses[6].json()).seasons;
+    let data = await getResponsesData(responses);
+    let playersSeason = data[0];
+    let playersPlayoffs = data[1];
+    let playerBios = data[2];
+    let schedule = data[3].games;
+    let franchiseInfo = data[5].data;
+    let seasons = data[6].seasons;
     let seasonDates = await getSeasonStartAndEndDates(season, seasons);
     let nextSeasonDates = await getNextSeasonStartAndEndDates(season, seasons);
     let standings = await getLatestStandingsForSeason(season, seasons);
@@ -101,7 +98,7 @@ export async function getTeamData(team, season) {
         let latestSeason = await getLatestSeason();
         let prospects = {};
         if (season === latestSeason) {
-            prospects = await responses[4].json();
+            prospects = data[4];
             prospects.forwards.forEach(forward => addProspectInfo(forward));
             prospects.defensemen.forEach(defenseman => addProspectInfo(defenseman));
             prospects.goalies.forEach(goalie => addProspectInfo(goalie));

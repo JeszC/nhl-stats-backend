@@ -1,4 +1,4 @@
-import {getLatestStandingsForSeason} from "../shared/utils.js";
+import {getLatestStandingsForSeason, getResponsesData} from "../shared/utils.js";
 
 /**
  * Returns the latest team standings with added data for the given season.
@@ -18,18 +18,13 @@ export async function getStandings(season) {
         fetch(`https://api.nhle.com/stats/rest/en/team/faceoffwins?cayenneExp=seasonId=${season}`),
         fetch("https://api-web.nhle.com/v1/standings-season")
     ]);
-    for (let response of responses) {
-        if (!response.ok) {
-            throw new Error("HTTP error");
-        }
-    }
-
-    let shotData = (await responses[0].json()).data;
-    let penaltyData = (await responses[1].json()).data;
-    let powerPlayData = (await responses[2].json()).data;
-    let penaltyKillData = (await responses[3].json()).data;
-    let faceOffData = (await responses[4].json()).data;
-    let seasons = (await responses[5].json()).seasons;
+    let data = await getResponsesData(responses);
+    let shotData = data[0].data;
+    let penaltyData = data[1].data;
+    let powerPlayData = data[2].data;
+    let penaltyKillData = data[3].data;
+    let faceOffData = data[4].data;
+    let seasons = data[5].seasons;
     let standings = await getLatestStandingsForSeason(season, seasons);
     if (standings.error) {
         console.error(`${new Date().toLocaleString()}:`, "Error fetching latest standings:", standings.error.message);

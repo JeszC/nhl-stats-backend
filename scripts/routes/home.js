@@ -1,4 +1,4 @@
-import {getResponseData} from "../shared/utils.js";
+import {getResponseData, getResponsesData} from "../shared/utils.js";
 
 const numberOfGamesToFetch = 12;
 const numberOfPlayersToFetch = 10;
@@ -59,15 +59,13 @@ export async function getTopTenSkaters() {
         fetch(`https://api-web.nhle.com/v1/skater-stats-leaders/${season}/2?limit=${numberOfPlayersToFetch}`),
         fetch(`https://api-web.nhle.com/v1/skater-stats-leaders/${season}/3?limit=${numberOfPlayersToFetch}`)
     ]);
-    if (responses[0].ok && responses[1].ok) {
-        let seasonSkaters = await responses[0].json();
-        let playoffSkaters = await responses[1].json();
-        return {
-            season: seasonSkaters,
-            playoff: playoffSkaters
-        };
-    }
-    throw new Error("HTTP error");
+    let data = await getResponsesData(responses);
+    let seasonSkaters = data[0];
+    let playoffSkaters = data[1];
+    return {
+        season: seasonSkaters,
+        playoff: playoffSkaters
+    };
 }
 
 /**
@@ -83,15 +81,13 @@ export async function getTopTenGoalies() {
         fetch(`https://api-web.nhle.com/v1/goalie-stats-leaders/${season}/2?limit=${numberOfPlayersToFetch}`),
         fetch(`https://api-web.nhle.com/v1/goalie-stats-leaders/${season}/3?limit=${numberOfPlayersToFetch}`)
     ]);
-    if (responses[0].ok && responses[1].ok) {
-        let seasonGoalies = await responses[0].json();
-        let playoffGoalies = await responses[1].json();
-        return {
-            season: seasonGoalies,
-            playoff: playoffGoalies
-        };
-    }
-    throw new Error("HTTP error");
+    let data = await getResponsesData(responses);
+    let seasonGoalies = data[0];
+    let playoffGoalies = data[1];
+    return {
+        season: seasonGoalies,
+        playoff: playoffGoalies
+    };
 }
 
 /**

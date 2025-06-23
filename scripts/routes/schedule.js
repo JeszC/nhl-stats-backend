@@ -1,4 +1,4 @@
-import {addCountryFlag, getResponseData} from "../shared/utils.js";
+import {addCountryFlag, getResponseData, getResponsesData} from "../shared/utils.js";
 
 /**
  * Returns the schedule for the given team for the given season.
@@ -33,13 +33,9 @@ export async function getGame(gameID) {
         fetch("https://records.nhl.com/site/api/coach"),
         fetch("https://records.nhl.com/site/api/officials")
     ]);
-    for (let response of responses) {
-        if (!response.ok) {
-            throw new Error("HTTP error");
-        }
-    }
-    let gameData = await responses[0].json();
-    let gameStats = await responses[1].json();
+    let data = await getResponsesData(responses);
+    let gameData = data[0];
+    let gameStats = data[1];
     if (gameData.matchup) {
         if (gameStats.teamSeasonStats) {
             gameData.matchup.teamSeasonStats = gameStats.teamSeasonStats;
@@ -58,17 +54,17 @@ export async function getGame(gameID) {
                 gameData.summary[key] = gameStats[key];
             }
             delete gameData.summary.gameVideo;
-            gameData.summary.playerByGameStats = (await responses[2].json()).playerByGameStats;
-            gameData.plays = (await responses[3].json()).plays;
+            gameData.summary.playerByGameStats = data[2].playerByGameStats;
+            gameData.plays = data[3].plays;
             for (let play of gameData.plays) {
                 if (play.details) {
                     play.details.yCoord = -play.details.yCoord;
                 }
             }
-            let coaches = (await responses[4].json()).data;
+            let coaches = data[4].data;
             addCoachData(gameData.season, gameData.awayTeam.abbrev, gameData.summary.gameInfo.awayTeam, coaches);
             addCoachData(gameData.season, gameData.homeTeam.abbrev, gameData.summary.gameInfo.homeTeam, coaches);
-            let officials = (await responses[5].json()).data;
+            let officials = data[5].data;
             addOfficialData(gameData.summary.gameInfo.referees, officials);
             addOfficialData(gameData.summary.gameInfo.linesmen, officials);
         }
@@ -173,13 +169,9 @@ export async function getRosters(awayTeam, homeTeam, season) {
         fetch(`https://api-web.nhle.com/v1/roster/${awayTeam}/${season}`),
         fetch(`https://api-web.nhle.com/v1/roster/${homeTeam}/${season}`)
     ]);
-    for (let response of responses) {
-        if (!response.ok) {
-            throw new Error("HTTP error");
-        }
-    }
-    let awayRosters = await responses[0].json();
-    let homeRosters = await responses[1].json();
+    let data = await getResponsesData(responses);
+    let awayRosters = data[0];
+    let homeRosters = data[1];
     awayRosters.players = awayRosters.forwards.concat(awayRosters.defensemen).concat(awayRosters.goalies);
     homeRosters.players = homeRosters.forwards.concat(homeRosters.defensemen).concat(homeRosters.goalies);
     return {awayRosters, homeRosters};

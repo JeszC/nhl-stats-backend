@@ -1,7 +1,7 @@
 import {
     addCountryFlag,
     filterMissingPlayers,
-    getNextSeasonStartAndEndDates, getResponseData,
+    getNextSeasonStartAndEndDates, getResponseData, getResponsesData,
     getSeasonStartAndEndDates,
     transferProperties
 } from "../shared/utils.js";
@@ -24,15 +24,11 @@ export async function getPlayers(team, season) {
         fetch(`https://api-web.nhle.com/v1/roster/${team}/${season}`),
         fetch("https://api-web.nhle.com/v1/standings-season")
     ]);
-    for (let response of responses) {
-        if (!response.ok) {
-            throw new Error("HTTP error");
-        }
-    }
-    let playerStatsSeason = await responses[0].json();
-    let playerStatsPlayoffs = await responses[1].json();
-    let playerBios = await responses[2].json();
-    let seasons = (await responses[3].json()).seasons;
+    let data = await getResponsesData(responses);
+    let playerStatsSeason = data[0];
+    let playerStatsPlayoffs = data[1];
+    let playerBios = data[2];
+    let seasons = data[3].seasons;
     let seasonDates = await getSeasonStartAndEndDates(season, seasons);
     let nextSeasonDates = await getNextSeasonStartAndEndDates(season, seasons);
 
@@ -73,13 +69,9 @@ export async function getPlayer(playerID) {
         fetch(`https://api-web.nhle.com/v1/player/${playerID}/landing`),
         fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/players?tags.slug=playerid-${playerID}`)
     ]);
-    for (let response of responses) {
-        if (!response.ok) {
-            throw new Error("HTTP error");
-        }
-    }
-    let player = await responses[0].json();
-    let biography = await responses[1].json();
+    let data = await getResponsesData(responses);
+    let player = data[0];
+    let biography = data[1];
     addCountryFlag(player, "birthCountry");
     addPlayerBiography(player, biography);
     await addLastFiveGamesDates(player);
@@ -118,13 +110,9 @@ async function addLastFiveGamesDates(player) {
             promises.push(fetch(`https://api-web.nhle.com/v1/gamecenter/${game.gameId}/landing`));
         }
         let responses = await Promise.all(promises);
-        for (let response of responses) {
-            if (!response.ok) {
-                throw new Error("HTTP error");
-            }
-        }
-        for (let i = 0; i < responses.length; i++) {
-            let game = await responses[i].json();
+        let data = await getResponsesData(responses);
+        for (let i = 0; i < data.length; i++) {
+            let game = data[i];
             player.last5Games[i].startTimeUTC = game.startTimeUTC;
         }
     } else {
