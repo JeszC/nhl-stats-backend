@@ -2,6 +2,7 @@ import compression from "compression";
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
+import awards from "./routes/awards.js";
 import draft from "./routes/draft.js";
 import healthcheck from "./routes/healthcheck.js";
 import home from "./routes/home.js";
@@ -30,6 +31,7 @@ app.use((_request, response, next) => {
 });
 
 app.use("/healthcheck", healthcheck);
+app.use("/awards", awards);
 app.use("/draft", draft);
 app.use("/home", home);
 app.use("/injuries", injuries);
