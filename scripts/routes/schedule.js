@@ -12,10 +12,7 @@ import {addCountryFlag, getResponseData} from "../shared/utils.js";
  */
 export async function getSchedule(season, team) {
     let response = await fetch(`https://api-web.nhle.com/v1/club-schedule-season/${team}/${season}`);
-    if (!response.ok) {
-        throw new Error("HTTP error");
-    }
-    return await response.json();
+    return await getResponseData(response);
 }
 
 /**
