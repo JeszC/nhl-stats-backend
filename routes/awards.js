@@ -11,8 +11,7 @@ router.get("/getTrophies", async (_request, response) => {
         console.error(`${new Date().toLocaleString()}:`, "Error fetching trophies:", trophies.error.message);
         response.send(trophies.error.message);
     } else {
-        let sortedData = trophies.data.sort((a, b) => a.seasonId - b.seasonId);
-        response.json(sortedData);
+        response.json(trophies.data);
     }
 });
 
@@ -25,6 +24,7 @@ router.get("/getTrophyWinners/:trophyCategoryID/:trophyID", async (request, resp
         console.error(`${new Date().toLocaleString()}:`, "Error fetching trophy winners:", winners.error.message);
         response.send(winners.error.message);
     } else {
+        winners.data.sort((a, b) => -(a.seasonId - b.seasonId));
         response.json(winners.data);
     }
 });
