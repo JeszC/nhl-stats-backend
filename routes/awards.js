@@ -11,7 +11,8 @@ router.get("/getTrophies", async (_request, response) => {
         console.error(`${new Date().toLocaleString()}:`, "Error fetching trophies:", trophies.error.message);
         response.send(trophies.error.message);
     } else {
-        response.json(trophies.data);
+        let sortedData = trophies.data.sort((a, b) => a.seasonId - b.seasonId);
+        response.json(sortedData);
     }
 });
 
