@@ -1,6 +1,17 @@
 import cache from "memory-cache";
 import {getCountryTwoLetterCode} from "./countryCodeConverter.js";
 
+/**
+ * Checks if the HTTP response was OK and if so, returns the data from the response in JSON format. If the response
+ * is not OK, then an error is thrown.
+ *
+ * @param response HTTP response.
+ * @param [subKey] If specified, returns the data from the JSON object under this key.
+ *
+ * @returns {Promise<{}>} A promise containing the data in a JSON object.
+ *
+ * @throws Error HTTP error if the response is not OK.
+ */
 export async function getResponseData(response, subKey) {
     if (response.ok) {
         if (subKey) {
@@ -11,6 +22,16 @@ export async function getResponseData(response, subKey) {
     throw new Error("HTTP error");
 }
 
+/**
+ * Checks if all the HTTP responses were OK and if so, returns the data from the responses in JSON format. If even
+ * one of the responses is not OK, then an error is thrown.
+ *
+ * @param responses An array containing the HTTP responses.
+ *
+ * @returns {Promise<[]>} A promise containing the data in an array.
+ *
+ * @throws Error HTTP error if one of the responses is not OK.
+ */
 export async function getResponsesData(responses) {
     let data = [];
     for (let response of responses) {
