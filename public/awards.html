@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>/awards</title>
+        <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    </head>
+    <body>
+        <h1>/awards</h1>
+        <p>
+            Endpoints for award-related data. You can find the trophy category IDs and trophy IDs from the data
+            supplied by the getTrophies-endpoint.
+        </p>
+        <h2>Endpoints:</h2>
+        <ul>
+            <li>/getTrophies</li>
+            <li>
+                /getTrophyWinners/{trophyCategoryID}/{trophyID}
+                <ul>
+                    <li>
+                        trophyCategoryID: number indicating the category to which the trophy belongs to (from 1 to 5 at
+                        least). These represent team, player, staff, etc.
+                    </li>
+                    <li>trophyID: number indicating the trophy ID.</li>
+                </ul>
+            </li>
+        </ul>
+        <a href="/" title="Back to index page">Back to index page</a>
+    </body>
+</html>
