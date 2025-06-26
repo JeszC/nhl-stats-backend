@@ -18,14 +18,13 @@ router.get("/getGame/:gameID", async (request, response) => {
 
 router.get("/getSeasonDates/:season", async (request, response) => {
     let cacheKeySeasons = "scheduleSeasons";
-    let cacheKeyDates = `scheduleSeasonDates${request.params.season}`;
     let seasons = await getFromCache(cacheKeySeasons, () => getSeasons());
     if (seasons.error) {
         console.error(`${new Date().toLocaleString()}:`, "Error fetching list of seasons:", seasons.error.message);
         response.send(seasons.error.message);
     } else {
-        let dates = await getFromCache(cacheKeyDates,
-            () => getSeasonStartAndEndDates(request.params.season, seasons.data));
+        let cacheKeyDates = `scheduleSeasonDates${request.params.season}`;
+        let dates = await getFromCache(cacheKeyDates, () => getSeasonStartAndEndDates(request.params.season, seasons.data));
         if (dates.error) {
             console.error(`${new Date().toLocaleString()}:`, "Error fetching season dates:", dates.error.message);
             response.send(dates.error.message);
