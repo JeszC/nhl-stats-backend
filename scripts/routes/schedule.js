@@ -1,6 +1,26 @@
 import {addCountryFlag, getResponseData, getResponsesData} from "../shared/utils.js";
 
 /**
+ * Adds missing data for players.
+ *
+ * @param game Game.
+ */
+export async function addPlayerData(game) {
+    if (!game.wasCached && Object.keys(game.data).length > 0) {
+        try {
+            let rosters = await getRosters(game.data.awayTeam.abbrev, game.data.homeTeam.abbrev, game.data.season);
+            addScratchPlayerData(game.data, rosters);
+            addPenaltyTakerHeadshots(game.data, rosters);
+        } catch (ignored) {
+            /*
+             Do nothing because the roster fetch likely failed. Most likely because of preseason games against
+             international teams (international teams don't have a valid endpoint on NHL API, so the fetch fails).
+             */
+        }
+    }
+}
+
+/**
  * Returns the schedule for the given team for the given season.
  *
  * @param season Season ID with start and end year as one string (YYYYYYYY, e.g., 20232024).

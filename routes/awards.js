@@ -1,18 +1,13 @@
 import express from "express";
-import {getTrophies, getTrophyWinners} from "../scripts/routes/awards.js";
-import {getFromCache} from "../scripts/shared/utils.js";
+import {getTrophies, getTrophyWinners, sortWinnersBySeason} from "../scripts/routes/awards.js";
+import {getFromCache, sendDataOrError} from "../scripts/shared/utils.js";
 
 const router = express.Router();
 
 router.get("/getTrophies", async (_request, response) => {
     let cacheKey = "trophies";
     let trophies = await getFromCache(cacheKey, () => getTrophies(), 86_400_000);
-    if (trophies.error) {
-        console.error(`${new Date().toLocaleString()}:`, "Error fetching trophies:", trophies.error.message);
-        response.send(trophies.error.message);
-    } else {
-        response.json(trophies.data);
-    }
+    await sendDataOrError(trophies, response, "Error fetching trophies:");
 });
 
 router.get("/getTrophyWinners/:trophyCategoryID/:trophyID", async (request, response) => {
@@ -20,13 +15,7 @@ router.get("/getTrophyWinners/:trophyCategoryID/:trophyID", async (request, resp
     let trophy = request.params.trophyID;
     let cacheKey = `winners${category}${trophy}`;
     let winners = await getFromCache(cacheKey, () => getTrophyWinners(category, trophy), 3_600_000);
-    if (winners.error) {
-        console.error(`${new Date().toLocaleString()}:`, "Error fetching trophy winners:", winners.error.message);
-        response.send(winners.error.message);
-    } else {
-        winners.data.sort((a, b) => -(a.seasonId - b.seasonId));
-        response.json(winners.data);
-    }
+    await sendDataOrError(winners, response, "Error fetching trophy winners:", () => sortWinnersBySeason(winners));
 });
 
 export default router;

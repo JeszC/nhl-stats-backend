@@ -27,3 +27,14 @@ export async function getTrophyWinners(trophyCategoryID, trophyID) {
     let response = await fetch(url);
     return await getResponseData(response, "data");
 }
+
+/**
+ * Sorts the winner array based on the season ID (latest season first).
+ *
+ * @param winners Trophy winners.
+ */
+export function sortWinnersBySeason(winners) {
+    if (!winners.wasCached) {
+        winners.data.sort((a, b) => -(a.seasonId - b.seasonId));
+    }
+}

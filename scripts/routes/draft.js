@@ -1,4 +1,4 @@
-import {getResponseData} from "../shared/utils.js";
+import {addCountryFlag, getResponseData} from "../shared/utils.js";
 
 /**
  * Returns the draft results for the given season.
@@ -12,4 +12,15 @@ import {getResponseData} from "../shared/utils.js";
 export async function getDraftResults(season) {
     let response = await fetch(`https://records.nhl.com/site/api/draft?cayenneExp=draftYear=${season.slice(4)}`);
     return await getResponseData(response, "data");
+}
+
+/**
+ * Adds a country flag image for all the draftees.
+ *
+ * @param draft Draftees.
+ */
+export function addCountryFlagForDraftees(draft) {
+    if (!draft.wasCached) {
+        draft.data.forEach(player => addCountryFlag(player, "countryCode"));
+    }
 }
