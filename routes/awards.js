@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get("/getTrophies", async (_request, response) => {
     let cacheKey = "trophies";
-    let trophies = await getFromCache(cacheKey, () => getTrophies());
+    let trophies = await getFromCache(cacheKey, () => getTrophies(), 86_400_000);
     if (trophies.error) {
         console.error(`${new Date().toLocaleString()}:`, "Error fetching trophies:", trophies.error.message);
         response.send(trophies.error.message);
@@ -19,7 +19,7 @@ router.get("/getTrophyWinners/:trophyCategoryID/:trophyID", async (request, resp
     let category = request.params.trophyCategoryID;
     let trophy = request.params.trophyID;
     let cacheKey = `winners${category}${trophy}`;
-    let winners = await getFromCache(cacheKey, () => getTrophyWinners(category, trophy));
+    let winners = await getFromCache(cacheKey, () => getTrophyWinners(category, trophy), 3_600_000);
     if (winners.error) {
         console.error(`${new Date().toLocaleString()}:`, "Error fetching trophy winners:", winners.error.message);
         response.send(winners.error.message);
