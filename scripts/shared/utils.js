@@ -2,13 +2,35 @@ import cache from "memory-cache";
 import {getCountryTwoLetterCode} from "./countryCodeConverter.js";
 
 /**
+ * Sends the data back or sends the specified error message along with the actual error message if the result object's
+ * error key is set to true.
+ *
+ * @param result Data to send back.
+ * @param response The response to which the data or error is sent.
+ * @param errorMessage Extra error message to send in case of an error.
+ * @param [preSendFunction] Optional function that is executed before the data is sent back. Useful in case the result
+ * data needs to be modified before sending.
+ */
+export async function sendDataOrError(result, response, errorMessage, preSendFunction) {
+    if (result.error) {
+        console.error(`${new Date().toLocaleString()}:`, errorMessage, result.error.message);
+        response.send(result.error.message);
+    } else {
+        if (preSendFunction) {
+            await preSendFunction();
+        }
+        response.json(result.data);
+    }
+}
+
+/**
  * Checks if the HTTP response was OK and if so, returns the data from the response in JSON format. If the response
  * is not OK, then an error is thrown.
  *
  * @param response HTTP response.
  * @param [subKey] If specified, returns the data from the JSON object under this key.
  *
- * @returns {Promise<{}>} A promise containing the data in a JSON object.
+ * @returns {Promise<{}> | Promise<[]>} A promise containing the data in a JSON object.
  *
  * @throws Error HTTP error if the response is not OK.
  */
