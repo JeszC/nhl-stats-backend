@@ -2,7 +2,7 @@ import {getResponseData} from "../shared/utils.js";
 
 const baseURL = "https://records.nhl.com/site/api/award-details?cayenneExp=";
 const playerFields = "&include=player.firstName&include=player.lastName&include=player.position";
-const teamFields = "&include=team.placeName&include=team.commonName&include=team.triCode&include=team.logos";
+const teamFields = "&include=team.placeName&include=team.commonName&include=team.triCode&include=team.logos&include=coach.firstName&include=coach.lastName&include=coach.id";
 
 /**
  * Returns an array of all NHL trophies.
