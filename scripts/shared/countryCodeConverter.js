@@ -60,6 +60,7 @@ const countries = {
     CRI: "CR",
     CIV: "CI",
     HRV: "HR",
+    CRO: "HR",
     CUB: "CU",
     CUW: "CW",
     CYP: "CY",
