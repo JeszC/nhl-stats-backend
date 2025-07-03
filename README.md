@@ -8,13 +8,15 @@ Backend for [NHL stats frontend](https://github.com/JeszC/nhl-stats-frontend).
 
 - [Node.js](https://nodejs.org/)
 
-## Starting the server
+## Commands
 
-After installing prerequisites, run the following command in the project directory:
+### `npm start`
 
-`npm start`
+Starts the server. Errors will be logged to the terminal.
 
-Errors will be logged to the terminal.
+### `npm test`
+
+Runs the tests in the tests folder. Also shows test coverage.
 
 ## Help and documentation
 
