@@ -1,6 +1,6 @@
+import {config} from "@dotenvx/dotenvx";
 import compression from "compression";
 import cors from "cors";
-import dotenv from "dotenv";
 import express from "express";
 import awards from "./routes/awards.js";
 import draft from "./routes/draft.js";
@@ -16,7 +16,7 @@ import standings from "./routes/standings.js";
 import teams from "./routes/teams.js";
 import trades from "./routes/trades.js";
 
-dotenv.config();
+config();
 const PORT = process.env.PORT || 3001;
 const app = express();
 
