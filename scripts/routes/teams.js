@@ -3,6 +3,7 @@ import {
     filterMissingPlayers,
     getLatestStandingsForSeason,
     getNextSeasonStartAndEndDates,
+    getResponseData,
     getResponsesData,
     getSeasonStartAndEndDates,
     transferProperties
@@ -20,14 +21,20 @@ import {getInjuriesForTeams} from "./injuries.js";
  * @throws Error HTTP error if fetching the data fails.
  */
 export async function getListOfTeams(season) {
-    let seasonsResponse = await fetch("https://api-web.nhle.com/v1/standings-season");
-    if (seasonsResponse.ok) {
-        let seasons = (await seasonsResponse.json()).seasons;
+    let teams = [];
+    if (season !== "20042005") {
+        let seasonsResponse = await fetch("https://api-web.nhle.com/v1/standings-season");
+        let seasons = await getResponseData(seasonsResponse, "seasons");
         let seasonStartDate = (await getSeasonStartAndEndDates(season, seasons)).seasonStartDate;
         let standingsResponse = await fetch(`https://api-web.nhle.com/v1/standings/${seasonStartDate}`);
-        if (standingsResponse.ok) {
-            let teams = [];
-            let standings = (await standingsResponse.json()).standings;
+        let standings = await getResponseData(standingsResponse, "standings");
+        if (standings.length === 0) {
+            let response = await fetch("https://api-web.nhle.com/v1/schedule-calendar/now");
+            teams = await getResponseData(response, "teams");
+            for (let team of teams) {
+                team.name = team.name.default;
+            }
+        } else {
             for (let team of standings) {
                 let teamAbbrev;
                 if (team.teamAbbrev.default === "CSE") {
@@ -42,12 +49,10 @@ export async function getListOfTeams(season) {
                     abbrev: teamAbbrev
                 });
             }
-            teams.sort((a, b) => a.name.localeCompare(b.name));
-            return teams;
         }
-        throw new Error("HTTP error");
     }
-    throw new Error("HTTP error");
+    teams.sort((a, b) => a.name.localeCompare(b.name));
+    return teams;
 }
 
 /**
