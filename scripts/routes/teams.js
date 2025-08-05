@@ -46,7 +46,8 @@ export async function getListOfTeams(season) {
                 }
                 teams.push({
                     name: team.teamName.default,
-                    abbrev: teamAbbrev
+                    abbrev: teamAbbrev,
+                    logo: team.teamLogo
                 });
             }
         }
