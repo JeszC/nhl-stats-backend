@@ -44,8 +44,6 @@ app.use("/signings", signings);
 app.use("/standings", standings);
 app.use("/teams", teams);
 app.use("/trades", trades);
-app.use((_request, response) => {
-    response.sendStatus(400);
-});
+app.use((_request, response) => response.sendStatus(400));
 
 app.listen(PORT, () => console.info(`Server listening on port ${PORT}`));
