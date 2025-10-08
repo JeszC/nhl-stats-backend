@@ -51,6 +51,7 @@ function addDataToStandings(standings, shotData, penaltyData, powerPlayData, pen
     penaltyKillData.sort((a, b) => a.teamFullName.localeCompare(b.teamFullName));
     faceOffData.sort((a, b) => a.teamFullName.localeCompare(b.teamFullName));
     standings.sort((a, b) => a.teamName.default.localeCompare(b.teamName.default));
+    standings.forEach(team => team.pointPctg = team.pointPctg ?? 0);
     if (shotData.length === standings.length) {
         for (let i = 0; i < shotData.length; i++) {
             standings[i].shotsForPerGame = shotData[i].shotsForPerGame;
