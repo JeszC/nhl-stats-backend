@@ -45,6 +45,5 @@ app.use("/standings", standings);
 app.use("/teams", teams);
 app.use("/trades", trades);
 app.use((_request, response) => response.sendStatus(400));
-console.log(process.env.NODE_ENV);
 
 app.listen(PORT, () => console.info(`Server listening on port ${PORT}`));
