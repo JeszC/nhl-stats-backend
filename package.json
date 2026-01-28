@@ -8,10 +8,10 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage=true"
   },
   "dependencies": {
-    "@dotenvx/dotenvx": "^1.51.4",
+    "@dotenvx/dotenvx": "^1.52.0",
     "compression": "^1.8.1",
     "cookie-parser": "~1.4.7",
-    "cors": "^2.8.5",
+    "cors": "^2.8.6",
     "debug": "~4.4.3",
     "express": "^5.2.1",
     "memory-cache": "^0.2.0"
