@@ -104,13 +104,15 @@ export async function getGame(gameID) {
  * @param coaches Array containing all NHL coaches.
  */
 function addCoachData(season, teamAbbrev, teamData, coaches) {
-    for (let coach of coaches) {
-        if (coach.fullName === teamData.headCoach.default) {
-            let headCoach = teamData.headCoach;
-            headCoach.headshot = `https://assets.nhle.com/mugs/nhl/${season}/${teamAbbrev}/coaches/${coach.id}.png`;
-            headCoach.nationalityCode = coach.nationalityCode;
-            addCountryFlag(teamData.headCoach, "nationalityCode");
-            return;
+    if (teamData.headCoach?.default) {
+        for (let coach of coaches) {
+            if (coach.fullName === teamData.headCoach.default) {
+                let headCoach = teamData.headCoach;
+                headCoach.headshot = `https://assets.nhle.com/mugs/nhl/${season}/${teamAbbrev}/coaches/${coach.id}.png`;
+                headCoach.nationalityCode = coach.nationalityCode;
+                addCountryFlag(teamData.headCoach, "nationalityCode");
+                return;
+            }
         }
     }
 }
