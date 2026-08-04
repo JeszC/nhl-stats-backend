@@ -116,7 +116,12 @@ export async function getTeamData(team, season) {
             season: playersSeason,
             playoffs: playersPlayoffs
         };
-        let injuries = await addInjuryData(players, fixedTeam, seasonDates);
+        let injuries = {};
+        try {
+            injuries = await addInjuryData(players, fixedTeam, seasonDates);
+        } catch (ignored) {
+            console.error(`${new Date().toLocaleString()}:`, "Error fetching injury data for team:", team);
+        }
         return {players, schedule, teamStats, prospects, franchiseInfo, injuries};
     }
 }
