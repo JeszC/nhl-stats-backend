@@ -213,7 +213,7 @@ function addPenaltyHeadshot(roster, penalty, penaltyTakerName) {
     if (penaltyTakerName) {
         for (let player of roster.players) {
             let playerFullName = `${player.firstName.default} ${player.lastName.default}`;
-            if (playerFullName.trim().toLowerCase() === penaltyTakerName.trim().toLowerCase()) {
+            if (playerFullName?.trim().toLowerCase() === penaltyTakerName.trim().toLowerCase()) {
                 penalty.playerId = player.id;
                 penalty.headshot = player.headshot;
                 return true;
@@ -252,7 +252,7 @@ function addOfficialData(gameOfficials, officialData) {
     for (let gameOfficial of gameOfficials) {
         for (let official of officialData) {
             let officialName = `${official.firstName} ${official.lastName}`;
-            if (gameOfficial.default.trim().toLowerCase() === officialName.trim().toLowerCase()) {
+            if (gameOfficial.default?.trim().toLowerCase() === officialName?.trim().toLowerCase()) {
                 gameOfficial.nationalityCode = official.nationalityCode;
                 addCountryFlag(gameOfficial, "nationalityCode");
                 gameOfficial.headshot = official.headshot_url;
