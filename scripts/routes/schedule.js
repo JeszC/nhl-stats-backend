@@ -252,7 +252,7 @@ function addOfficialData(gameOfficials, officialData) {
     for (let gameOfficial of gameOfficials) {
         for (let official of officialData) {
             let officialName = `${official.firstName} ${official.lastName}`;
-            if (gameOfficial.default?.trim().toLowerCase() === officialName?.trim().toLowerCase()) {
+            if (gameOfficial.fullName?.default?.trim().toLowerCase() === officialName?.trim().toLowerCase()) {
                 gameOfficial.nationalityCode = official.nationalityCode;
                 addCountryFlag(gameOfficial, "nationalityCode");
                 gameOfficial.headshot = official.headshot_url;
